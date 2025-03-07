@@ -185,12 +185,21 @@ function processWatchersAvailability(availability) {
 		console.log(`Processing ${watch.date}. Sold out status: ${soldOut}, Reservation not needed status: ${resNotNeeded}, Availability status: ${resAvailable}, Price: $${resPrice}, Description: ${resDescription}.`);
 
 		if(!soldOut && !resNotNeeded && resAvailable) {
-			sendReservationEmbed(watch.channelId, watch.date, resDescription, resPrice);
+			sendReservationEmbed(client, {
+				channelId: watch.channelId,
+				watchDate: watch.date,
+				resDescription,
+				resPrice
+			});
 			fulfilledIndexes.push(index);
 
 			console.log(`Finished processing ${watch.date}. Reservation found.`);
 		} else if(resNotNeeded) {
-			sendNoReservationNeededEmbed(watch.channelId, watch.date, resDescription);
+			sendNoReservationNeededEmbed(client, {
+				channelId: watch.channelId,
+				watchDate: watch.date,
+				resDescription
+			});
 			fulfilledIndexes.push(index);
 
 			console.log(`Finished processing ${watch.date}. No reservations needed.`);
