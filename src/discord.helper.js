@@ -17,6 +17,8 @@ function sendReservationEmbed(client, {
 		.fetch(channelId)
 		.then((channel) => {
 			channel.send({
+				// ping @everyone to notify all users
+				content: '@everyone',
 				embeds: [{
 					title: `Parking is available for ${watchDate}`,
 					description: `Reservation Description: ${resDescription}`,

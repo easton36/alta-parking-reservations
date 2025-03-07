@@ -12,4 +12,4 @@ Public and private parking are separate pools of spots, with public being $25.00
 
 ## Commands
 
-- `!watch <date>` - Watches for parking availability on the specified date. Date format is `YYYY-MM-DD`.
+- `!watch <date> <private|public>` - Watches for parking availability on the specified date. Optionally, you can specify `private` or `public` to check for private or public parking availability ONLY. Defaults to checking for both.

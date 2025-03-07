@@ -68,18 +68,30 @@ async function watchCommand(message) {
 		return message.reply('Invalid date format. Use `YYYY-MM-DD`.');
 	}
 
-	// Store this watch in memory
-	watchers.push({
+	const watcher = {
 		userId: message.author.id, // who asked
 		channelId: message.channel.id, // where to notify
 		date: dateArg // the date they want to watch
-	});
+	};
+
+	// extra optional arg to specify to check for private or public parking
+	if(args.length > 2) {
+		const parkingType = args[2].toLowerCase();
+		if(parkingType !== 'private' && parkingType !== 'public') {
+			return message.reply('Invalid parking type. Use `private` or `public`.');
+		}
+
+		watcher.parkingType = parkingType;
+	}
+
+	// Store this watch in memory
+	watchers.push(watcher);
 
 	// Persist to disk
 	saveWatchers();
 
 	// delete the user's message
-	const replyMessage = await message.reply(`Alright, I'm now watching for availability on **${dateArg}**!`);
+	const replyMessage = await message.reply(`Alright, I'm now watching for availability on **${dateArg}**! ${watcher.parkingType ? `And only ${watcher.parkingType} parking.` : ''}`);
 
 	// delete both messages after a few seconds
 	return setTimeout(() => {
@@ -110,7 +122,7 @@ async function checkPrivateParkingAvailability() {
 		const privateAvailability = await fetchPrivateParkingAvailability(cartHashId);
 		if(!privateAvailability) throw new Error('Failed to fetch private parking availability');
 
-		const fulfilledIndexes = processWatchersAvailability(privateAvailability);
+		const fulfilledIndexes = processWatchersAvailability(privateAvailability, 'private');
 		removeFulfilledWatchers(fulfilledIndexes);
 
 		if(fulfilledIndexes.length > 0) {
@@ -129,7 +141,7 @@ async function checkPublicParkingAvailability() {
 		const publicAvailability = await fetchPublicParkingAvailability();
 		if(!publicAvailability) throw new Error('Failed to fetch public parking availability');
 
-		const fulfilledIndexes = processWatchersAvailability(publicAvailability);
+		const fulfilledIndexes = processWatchersAvailability(publicAvailability, 'public');
 		removeFulfilledWatchers(fulfilledIndexes);
 
 		if(fulfilledIndexes.length > 0) {
@@ -157,13 +169,18 @@ setInterval(async () => {
 /**
  * Processes the availability data and returns an array of fulfilled indexes
  * @param {object} availability - The availability data
+ * @param {string} parkingType - The parking type to check for
  * @returns {number[]} An array of fulfilled indexes
  */
-function processWatchersAvailability(availability) {
+function processWatchersAvailability(availability, parkingType) {
 	const fulfilledIndexes = [];
 
 	// Loop through each watcher and check if the availability data matches
 	watchers.forEach((watch, index) => {
+		if(watch.parkingType && watch.parkingType !== parkingType) {
+			return console.log(`Skipping ${watch.date} because it is not ${parkingType} parking.`);
+		}
+
 		const dateTime = Object.keys(availability).find((key) => key.startsWith(watch.date));
 		if(!dateTime) {
 			return console.log(`No availability data found for ${watch.date}. Skipping.`);
