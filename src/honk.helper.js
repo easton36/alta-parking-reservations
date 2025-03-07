@@ -1,6 +1,27 @@
 const HONK_AUTH_TOKEN = process.env.HONK_AUTH_TOKEN;
 const HONK_GUID = process.env.HONK_GUID;
 
+const ALTA_PORTAL_ID = '2Gh4';
+const ALTA_INVENTORY_ID = '72U6';
+const ALTA_ZONE_ID = 'elP1Tp';
+
+const HONK_HEADERS = {
+	accept: '*/*',
+	'accept-language': 'en-US,en;q=0.9,af;q=0.8',
+	'cache-control': 'no-cache',
+	'content-type': 'application/json',
+	pragma: 'no-cache',
+	priority: 'u=1, i',
+	'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
+	'sec-ch-ua-mobile': '?0',
+	'sec-ch-ua-platform': '"macOS"',
+	'sec-fetch-dest': 'empty',
+	'sec-fetch-mode': 'cors',
+	'sec-fetch-site': 'cross-site',
+	'sec-gpc': '1',
+	'x-authentication': HONK_AUTH_TOKEN
+};
+
 /**
  * Fetches account promo codes
  * @returns {string} The latest promo code
@@ -8,27 +29,12 @@ const HONK_GUID = process.env.HONK_GUID;
 async function fetchAccountPromoCodes() {
 	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
 		method: 'POST',
-		headers: {
-			accept: '*/*',
-			'accept-language': 'en-US,en;q=0.9,af;q=0.8',
-			'cache-control': 'no-cache',
-			'content-type': 'application/json',
-			pragma: 'no-cache',
-			priority: 'u=1, i',
-			'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-			'sec-ch-ua-mobile': '?0',
-			'sec-ch-ua-platform': '"macOS"',
-			'sec-fetch-dest': 'empty',
-			'sec-fetch-mode': 'cors',
-			'sec-fetch-site': 'cross-site',
-			'sec-gpc': '1',
-			'x-authentication': HONK_AUTH_TOKEN
-		},
+		headers: HONK_HEADERS,
 		referrer: 'https://reserve.altaparking.com/',
 		referrerPolicy: 'strict-origin-when-cross-origin',
 		body: JSON.stringify({
 			operationName: 'AccountPromoCodes',
-			variables: { rsvpPortalId: '2Gh4' },
+			variables: { rsvpPortalId: ALTA_PORTAL_ID },
 			query: `fragment CorePromoCodeFields on PromoCode {
 	hashid
 	redeemCode
@@ -92,22 +98,7 @@ async function fetchAccountPromoCodes() {
 async function createCart() {
 	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
 		method: 'POST',
-		headers: {
-			accept: '*/*',
-			'accept-language': 'en-US,en;q=0.9,af;q=0.8',
-			'cache-control': 'no-cache',
-			'content-type': 'application/json',
-			pragma: 'no-cache',
-			priority: 'u=1, i',
-			'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-			'sec-ch-ua-mobile': '?0',
-			'sec-ch-ua-platform': '"macOS"',
-			'sec-fetch-dest': 'empty',
-			'sec-fetch-mode': 'cors',
-			'sec-fetch-site': 'cross-site',
-			'sec-gpc': '1',
-			'x-authentication': HONK_AUTH_TOKEN
-		},
+		headers: HONK_HEADERS,
 		referrer: 'https://reserve.altaparking.com/',
 		referrerPolicy: 'strict-origin-when-cross-origin',
 		body: JSON.stringify({
@@ -115,7 +106,7 @@ async function createCart() {
 			variables: {
 				input: {
 					startTime: '2024-10-01T08:00:00-06:00',
-					zoneId: 'elP1Tp',
+					zoneId: ALTA_ZONE_ID,
 					productType: 'RESERVE'
 				}
 			},
@@ -149,22 +140,7 @@ async function createCart() {
 async function claimCart(cartHashId) {
 	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
 		method: 'POST',
-		headers: {
-			accept: '*/*',
-			'accept-language': 'en-US,en;q=0.9,af;q=0.8',
-			'cache-control': 'no-cache',
-			'content-type': 'application/json',
-			pragma: 'no-cache',
-			priority: 'u=1, i',
-			'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-			'sec-ch-ua-mobile': '?0',
-			'sec-ch-ua-platform': '"macOS"',
-			'sec-fetch-dest': 'empty',
-			'sec-fetch-mode': 'cors',
-			'sec-fetch-site': 'cross-site',
-			'sec-gpc': '1',
-			'x-authentication': HONK_AUTH_TOKEN
-		},
+		headers: HONK_HEADERS,
 		referrer: 'https://reserve.altaparking.com/',
 		referrerPolicy: 'strict-origin-when-cross-origin',
 		body: JSON.stringify({
@@ -207,22 +183,7 @@ async function claimCart(cartHashId) {
 async function redeemPromoCode(cartId, promoCode) {
 	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
 		method: 'POST',
-		headers: {
-			accept: '*/*',
-			'accept-language': 'en-US,en;q=0.9,af;q=0.8',
-			'cache-control': 'no-cache',
-			'content-type': 'application/json',
-			pragma: 'no-cache',
-			priority: 'u=1, i',
-			'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-			'sec-ch-ua-mobile': '?0',
-			'sec-ch-ua-platform': '"macOS"',
-			'sec-fetch-dest': 'empty',
-			'sec-fetch-mode': 'cors',
-			'sec-fetch-site': 'cross-site',
-			'sec-gpc': '1',
-			'x-authentication': 'c24aa09ed44948638bd60b3dbdd76b4e'
-		},
+		headers: HONK_HEADERS,
 		referrer: 'https://reserve.altaparking.com/',
 		referrerPolicy: 'strict-origin-when-cross-origin',
 		body: JSON.stringify({
@@ -283,45 +244,34 @@ async function redeemPromoCode(cartId, promoCode) {
 }
 
 /**
+ * Builds a cartStartTime string from a date
+ * @param {Date} date - The date to build the cartStartTime string from
+ * @returns {string} The cartStartTime string
+ */
+const buildCartStartTime = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T08:00:00-07:00`;
+
+/**
  * Fetches the private parking availability data
  * @param {string} cartId - The cartId string
- * @param {string} cartStartTime - The cartStartTime string
- * @param {number} year - The year to fetch the data for
  * @returns {object} The parking availability data
  */
-async function fetchPrivateParkingAvailability(cartId, cartStartTime, year) {
-	const response = await fetch(
-		'https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
-			method: 'POST',
-			headers: {
-				accept: '*/*',
-				'accept-language': 'en-US,en;q=0.9,af;q=0.8',
-				'cache-control': 'no-cache',
-				'content-type': 'application/json',
-				pragma: 'no-cache',
-				priority: 'u=1, i',
-				'sec-ch-ua': '"Not(A:Brand";v="99", "Brave";v="133", "Chromium";v="133"',
-				'sec-ch-ua-mobile': '?0',
-				'sec-ch-ua-platform': '"macOS"',
-				'sec-fetch-dest': 'empty',
-				'sec-fetch-mode': 'cors',
-				'sec-fetch-site': 'cross-site',
-				'sec-gpc': '1',
-				'x-authentication': HONK_AUTH_TOKEN
+async function fetchPrivateParkingAvailability(cartId) {
+	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
+		method: 'POST',
+		headers: HONK_HEADERS,
+		referrer: 'https://reserve.altaparking.com/',
+		referrerPolicy: 'strict-origin-when-cross-origin',
+		body: JSON.stringify({
+			operationName: 'PrivateParkingAvailability',
+			variables: {
+				id: ALTA_INVENTORY_ID,
+				cartId,
+				cartStartTime: buildCartStartTime(new Date()),
+				startDay: 60,
+				endDay: 120,
+				year: new Date().getFullYear()
 			},
-			referrer: 'https://reserve.altaparking.com/',
-			referrerPolicy: 'strict-origin-when-cross-origin',
-			body: JSON.stringify({
-				operationName: 'PrivateParkingAvailability',
-				variables: {
-					id: '72U6',
-					cartId,
-					cartStartTime,
-					startDay: 60,
-					endDay: 120,
-					year
-				},
-				query: `
+			query: `
 			  query PrivateParkingAvailability(
 				$id: ID!,
 				$cartId: ID!,
@@ -340,11 +290,10 @@ async function fetchPrivateParkingAvailability(cartId, cartStartTime, year) {
 				)
 			  }
 			`
-			}),
-			mode: 'cors',
-			credentials: 'omit'
-		}
-	);
+		}),
+		mode: 'cors',
+		credentials: 'omit'
+	});
 
 	const data = await response.json();
 	if(!data?.data?.privateParkingAvailability) {
@@ -361,28 +310,22 @@ async function fetchPrivateParkingAvailability(cartId, cartStartTime, year) {
 
 /**
  * Fetches the public parking availability data
- * @param {string} cartStartTime - The cartStartTime string
- * @param {number} year - The year to fetch the data for
  * @returns {object} The parking availability data
  */
-async function fetchPublicParkingAvailability(cartStartTime, year) {
-	const response = await fetch(
-		'https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'x-authentication': HONK_AUTH_TOKEN
+async function fetchPublicParkingAvailability() {
+	const response = await fetch('https://platform.honkmobile.com/graphql?honkGUID=' + HONK_GUID, {
+		method: 'POST',
+		headers: HONK_HEADERS,
+		body: JSON.stringify({
+			operationName: 'PublicParkingAvailability',
+			variables: {
+				id: ALTA_INVENTORY_ID,
+				cartStartTime: buildCartStartTime(new Date()),
+				startDay: 60,
+				endDay: 120,
+				year: new Date().getFullYear()
 			},
-			body: JSON.stringify({
-				operationName: 'PublicParkingAvailability',
-				variables: {
-					id: '72U6',
-					cartStartTime,
-					startDay: 60,
-					endDay: 120,
-					year
-				},
-				query: `
+			query: `
 			query PublicParkingAvailability(
 			  $id: ID!,
 			  $cartStartTime: String!,
@@ -399,9 +342,8 @@ async function fetchPublicParkingAvailability(cartStartTime, year) {
 			  )
 			}
 		  `
-			})
-		}
-	);
+		})
+	});
 
 	const data = await response.json();
 	if(!data?.data?.publicParkingAvailability) {
