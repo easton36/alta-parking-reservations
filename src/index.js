@@ -108,7 +108,7 @@ async function checkPrivateParkingAvailability() {
 		console.log(`Created a new cart with hashid ${cartHashId}, claimed it, and redeemed promo code ${honkPromoCode} to get a private parking availability.`);
 		// get the availability
 		const privateAvailability = await fetchPrivateParkingAvailability(cartHashId);
-		if(!privateAvailability) return;
+		if(!privateAvailability) throw new Error('Failed to fetch private parking availability');
 
 		const fulfilledIndexes = processWatchersAvailability(privateAvailability);
 		removeFulfilledWatchers(fulfilledIndexes);
@@ -125,14 +125,18 @@ async function checkPrivateParkingAvailability() {
  * Checks public parking availability
  */
 async function checkPublicParkingAvailability() {
-	const publicAvailability = await fetchPublicParkingAvailability();
-	if(!publicAvailability) return;
+	try {
+		const publicAvailability = await fetchPublicParkingAvailability();
+		if(!publicAvailability) throw new Error('Failed to fetch public parking availability');
 
-	const fulfilledIndexes = processWatchersAvailability(publicAvailability);
-	removeFulfilledWatchers(fulfilledIndexes);
+		const fulfilledIndexes = processWatchersAvailability(publicAvailability);
+		removeFulfilledWatchers(fulfilledIndexes);
 
-	if(fulfilledIndexes.length > 0) {
-		saveWatchers();
+		if(fulfilledIndexes.length > 0) {
+			saveWatchers();
+		}
+	} catch(err) {
+		console.error('Error checking public parking availability:', err);
 	}
 }
 
@@ -178,6 +182,8 @@ function processWatchersAvailability(availability) {
 			price: resPrice
 		} = dayInfo[resDataKey] || {};
 
+		console.log(`Processing ${watch.date}. Sold out status: ${soldOut}, Reservation not needed status: ${resNotNeeded}, Availability status: ${resAvailable}, Price: $${resPrice}, Description: ${resDescription}.`);
+
 		if(!soldOut && !resNotNeeded && resAvailable) {
 			sendReservationEmbed(watch.channelId, watch.date, resDescription, resPrice);
 			fulfilledIndexes.push(index);
@@ -188,6 +194,8 @@ function processWatchersAvailability(availability) {
 			fulfilledIndexes.push(index);
 
 			console.log(`Finished processing ${watch.date}. No reservations needed.`);
+		} else {
+			console.log(`Finished processing ${watch.date}. No reservations available.`);
 		}
 	});
 
