@@ -191,7 +191,8 @@ function processWatchersAvailability(availability, parkingType) {
 
 		const {
 			sold_out: soldOut,
-			reservation_not_needed: resNotNeeded
+			reservation_not_needed: resNotNeeded,
+			unavailable: resUnavailable
 		} = dayInfo.status || {};
 		const {
 			available: resAvailable,
@@ -199,9 +200,9 @@ function processWatchersAvailability(availability, parkingType) {
 			price: resPrice
 		} = dayInfo[resDataKey] || {};
 
-		console.log(`Processing ${watch.date}. Sold out status: ${soldOut}, Reservation not needed status: ${resNotNeeded}, Availability status: ${resAvailable}, Price: $${resPrice}, Description: ${resDescription}.`);
+		console.log(`Processing ${watch.date}. Sold out status: ${soldOut}, Reservation not needed status: ${resNotNeeded}, Availability status: ${(resAvailable === true || resUnavailable === false) ? 'Available' : 'Unavailable'}, Price: $${resPrice}, Description: ${resDescription}.`);
 
-		if(!soldOut && !resNotNeeded && resAvailable) {
+		if(!soldOut && !resNotNeeded) {
 			sendReservationEmbed(client, {
 				channelId: watch.channelId,
 				watchDate: watch.date,

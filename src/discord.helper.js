@@ -21,10 +21,10 @@ function sendReservationEmbed(client, {
 				content: '@everyone',
 				embeds: [{
 					title: `Parking is available for ${watchDate}`,
-					description: `Reservation Description: ${resDescription}`,
+					description: `Reservation Description: ${resDescription || 'None'}`,
 					fields: [{
 						name: 'Price',
-						value: `$${resPrice}`
+						value: resPrice ? `$${resPrice}` : 'None Provided'
 					},
 					{
 						name: 'Link',
@@ -61,7 +61,7 @@ function sendNoReservationNeededEmbed(client, {
 			channel.send({
 				embeds: [{
 					title: `Parking reservation not needed for ${watchDate}`,
-					description: `Reservation Description: ${resDescription}`,
+					description: `Reservation Description: ${resDescription || 'None'}`,
 					fields: [{
 						name: 'Link',
 						value: 'https://reserve.altaparking.com/select-parking'
